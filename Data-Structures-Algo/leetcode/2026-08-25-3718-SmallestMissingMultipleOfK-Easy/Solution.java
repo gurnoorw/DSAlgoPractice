@@ -1,46 +1,39 @@
-/* https://leetcode.com/problems/count-subarrays-with-majority-element-ii/
-* O(n) solution
-* */
-class Solution {
-
-    public int missingMultiple(int[] nums, int k) {
-        Set<Integer> seen = new HashSet<>();
-        for (int num : nums) {
-            seen.add(num);
-        }
-        int ans = k;
-        while (seen.contains(ans)) {
-            ans += k;
-        }
-        return ans;
-    }
-}
 /*
-O(nLogN) solution
-----
-
+https://leetcode.com/problems/shortest-and-lexicographically-smallest-beautiful-string/
+ */
 class Solution {
+    public String shortestBeautifulSubstring(String s, int k) {
+        int n = s.length();
+        String smallest = s;
 
-    public int missingMultiple(int[] nums, int k) {
-        Set<Integer> set = new TreeSet<>();
-        for(int num : nums){
-            if(num % k == 0){
-                set.add(num / k);
+        int ones = 0;
+        int left = 0;
+        int total = 0;
+        for(int right = 0; right < n; right++){
+            if(s.charAt(right) == '1'){
+                ones++;
+                total++;
+            }
+            while(ones > k && left <= right){
+                if(s.charAt(left) == '1'){
+                    ones--;
+                }
+                left++;
+            }
+            while(left <= right && s.charAt(left) == '0' ){
+                left++;
+            }
+            if(ones == k &&
+                    (s.substring(left , right + 1).length() < smallest.length()
+                            || ( s.substring(left , right + 1).length() == smallest.length()
+                            && s.substring(left , right + 1).compareTo(smallest) < 0))){
+                smallest = s.substring(left , right + 1);
             }
         }
 
-        int lastFound = 0;
-        for(int key : set){
-            if(key - lastFound > 1){
-                return (lastFound + 1 ) * k;
-            }
-            else{
-                lastFound = key;
-            }
+        if(k > total){
+            return "";
         }
-        return (lastFound + 1 ) * k;
+        return smallest;
     }
 }
-
-
- */
